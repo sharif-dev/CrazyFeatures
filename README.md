@@ -1,4 +1,4 @@
 # CrazyFeatures
-Fatemeh Bahrani
-AtenaSaghi
+Fatemeh Bahrani/
+Atena Saghi
 
