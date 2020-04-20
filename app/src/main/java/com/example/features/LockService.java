@@ -23,6 +23,7 @@ public class LockService extends Service {
 
     private SensorManager sm;
     private DevicePolicyManager mdevicePolicy;
+    private int beta_;
 
 
     public IBinder onBind(Intent intent) {
@@ -57,7 +58,7 @@ public class LockService extends Service {
             int inclination = (int) Math.round(Math.toDegrees(Math.acos(z)));
             Log.i("tag","incline is:"+inclination);
 
-            if (inclination < 25 || inclination > 155)
+            if (inclination < beta_ || inclination >(180 - beta_))
             {
 
                 mdevicePolicy.lockNow();
@@ -76,8 +77,9 @@ public class LockService extends Service {
         Toast.makeText(this, "SecondService Started!", Toast.LENGTH_LONG).show();
 
         sm.registerListener(sensorEventListener, sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
-        return super.onStartCommand(intent, flags, startId);
-
+        beta_ = intent.getIntExtra("beta" , 25);
+//        return super.onStartCommand(intent, flags, startId);
+            return START_STICKY;
     }
 
 

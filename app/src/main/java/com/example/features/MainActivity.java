@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     TextView locksensivity;
     SeekBar lockscreenbar;
     private int progress_;
+    private int _progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
                     editor.apply();
                     shakeseekbar.setVisibility(View.VISIBLE);
                     shakesensivity.setVisibility(View.VISIBLE);
-                    shakesensivity.setText("ShakeDegree: "+12);
+                    shakesensivity.setText("ShakeDegree: "+ 12);
                     shakeseekbar.setProgress(12);
 
                     shakeseekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -73,7 +74,6 @@ public class MainActivity extends AppCompatActivity {
                             first.putExtra("alpha"  , progress_);
                             startService(first);
                         }
-
                         @Override
                         public void onStartTrackingTouch(SeekBar seekBar) {
                         }
@@ -113,15 +113,39 @@ public class MainActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 boolean active = devicePolicyManager.isAdminActive(compName);
 
-
-
                 if (isChecked)
                 {
+
                     if (active)
                     {
+                        final Intent intent = new Intent(MainActivity.this , LockService.class);
 
-                        Intent intent = new Intent(MainActivity.this , LockService.class);
-                        startService(intent);
+                        lockscreenbar.setVisibility(View.VISIBLE);
+                        locksensivity.setVisibility(View.VISIBLE);
+                        locksensivity.setText("Degree: "+ 25);
+                        lockscreenbar.setProgress(25);
+                        lockscreenbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                            @Override
+                            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                                locksensivity.setText("Degree: "+progress);
+                                _progress = lockscreenbar.getProgress();
+                                intent.putExtra("beta"  , _progress);
+                                startService(intent);
+                            }
+
+                            @Override
+                            public void onStartTrackingTouch(SeekBar seekBar) {
+
+                            }
+
+                            @Override
+                            public void onStopTrackingTouch(SeekBar seekBar) {
+
+                            }
+                        });
+
+
+
 
                     }
 
@@ -136,8 +160,27 @@ public class MainActivity extends AppCompatActivity {
                         startActivityForResult(intent, RESULT_ENABLE);
                         if (active)
                         {
-                            Intent intent2 = new Intent(MainActivity.this, LockService.class);
-                            startService(intent2);
+                            final Intent intent2 = new Intent(MainActivity.this , LockService.class);
+
+                            lockscreenbar.setVisibility(View.VISIBLE);
+                            locksensivity.setVisibility(View.VISIBLE);
+                            locksensivity.setText("Degree: "+ 25);
+                            lockscreenbar.setProgress(25);
+                            lockscreenbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                                @Override
+                                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                                    locksensivity.setText("Degree: "+progress);
+                                    _progress = lockscreenbar.getProgress();
+                                    intent2.putExtra("beta"  , _progress);
+                                    startService(intent2);
+                                }
+                                @Override
+                                public void onStartTrackingTouch(SeekBar seekBar) {
+                                }
+                                @Override
+                                public void onStopTrackingTouch(SeekBar seekBar) {
+                                }
+                            });
                         }
                         else {
                             Log.i("stop service" , String.valueOf(active)) ;
@@ -154,6 +197,8 @@ public class MainActivity extends AppCompatActivity {
                     Log.i("stop service" , String.valueOf(active)) ;
                     stopService(new Intent(MainActivity.this , LockService.class));
                     devicePolicyManager.removeActiveAdmin(compName);
+                    lockscreenbar.setVisibility(View.GONE);
+                    locksensivity.setVisibility(View.GONE);
 
                 }
 
