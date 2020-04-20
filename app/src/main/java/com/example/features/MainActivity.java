@@ -11,12 +11,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.util.Log;
+import android.view.View;
 import android.widget.CompoundButton;
-import android.widget.Switch;
+import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
 public class MainActivity extends AppCompatActivity {
     public static final int RESULT_ENABLE = 11;
@@ -25,17 +25,28 @@ public class MainActivity extends AppCompatActivity {
     private ComponentName compName;
     SwitchCompat switch1;
     SwitchCompat switch2;
+    TextView shakesensivity;
+    SeekBar shakeseekbar;
+    TextView locksensivity;
+    SeekBar lockscreenbar;
+    private int progress_;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-       switch1 = findViewById(R.id.shakedetect);
-       switch2 = findViewById(R.id.Lockscreen);
+        switch1 = findViewById(R.id.shakedetect);
+        switch2 = findViewById(R.id.Lockscreen);
+        shakesensivity = findViewById(R.id.alpha);
+        shakeseekbar=findViewById(R.id.shakesense);
+        lockscreenbar = findViewById(R.id.lockangel);
+        locksensivity=findViewById(R.id.beta);
 
-        devicePolicyManager = (DevicePolicyManager) getSystemService(DEVICE_POLICY_SERVICE);
-        activityManager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
-        compName = new ComponentName(this, MyAdmin.class);
+        shakeseekbar.setVisibility(View.GONE);
+        shakesensivity.setVisibility(View.GONE);
+
+        lockscreenbar.setVisibility(View.GONE);
+        locksensivity.setVisibility(View.GONE);
 
         SharedPreferences sharedPrefs = getSharedPreferences("com.example.features", MODE_PRIVATE);
         switch1.setChecked(sharedPrefs.getBoolean("tag", false));
@@ -45,10 +56,34 @@ public class MainActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
                 if (isChecked){
-                    startService(new Intent(MainActivity.this , ShakeService.class));
+                    final Intent first = new Intent(MainActivity.this , ShakeService.class);
                     SharedPreferences.Editor editor = getSharedPreferences("com.example.features", MODE_PRIVATE).edit();
                     editor.putBoolean("tag", true);
                     editor.apply();
+                    shakeseekbar.setVisibility(View.VISIBLE);
+                    shakesensivity.setVisibility(View.VISIBLE);
+                    shakesensivity.setText("ShakeDegree: "+12);
+                    shakeseekbar.setProgress(12);
+
+                    shakeseekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                        @Override
+                        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                            shakesensivity.setText("ShakeDegree: "+progress);
+                            progress_ = shakeseekbar.getProgress();
+                            first.putExtra("alpha"  , progress_);
+                            startService(first);
+                        }
+
+                        @Override
+                        public void onStartTrackingTouch(SeekBar seekBar) {
+                        }
+                        @Override
+                        public void onStopTrackingTouch(SeekBar seekBar) {
+                        }
+                    });
+                    startService(first);
+
+
                 }
                 else
                 {
@@ -56,6 +91,9 @@ public class MainActivity extends AppCompatActivity {
                     SharedPreferences.Editor editor = getSharedPreferences("com.example.features", MODE_PRIVATE).edit();
                     editor.putBoolean("tag", false);
                     editor.apply();
+                    shakeseekbar.setVisibility(View.GONE);
+                    shakesensivity.setVisibility(View.GONE);
+
                 }
 
             }
@@ -64,6 +102,11 @@ public class MainActivity extends AppCompatActivity {
 
 
         //////////////    THIRD FEATURES /////////////////////////
+        devicePolicyManager = (DevicePolicyManager) getSystemService(DEVICE_POLICY_SERVICE);
+        activityManager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+        compName = new ComponentName(this, MyAdmin.class);
+
+
 
         switch2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -76,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
                 {
                     if (active)
                     {
+
                         Intent intent = new Intent(MainActivity.this , LockService.class);
                         startService(intent);
 
@@ -104,7 +148,6 @@ public class MainActivity extends AppCompatActivity {
 
                     }
 
-
                 }
                 else
                 {
@@ -113,11 +156,6 @@ public class MainActivity extends AppCompatActivity {
                     devicePolicyManager.removeActiveAdmin(compName);
 
                 }
-
-
-
-
-
 
 
             }

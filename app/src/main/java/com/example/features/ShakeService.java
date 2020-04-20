@@ -1,8 +1,6 @@
 package com.example.features;
 
 import android.annotation.SuppressLint;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -16,13 +14,19 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.util.Log;
 import android.widget.Toast;
+
+import java.net.URISyntaxException;
+
 import androidx.annotation.RequiresApi;
+
+import static android.content.Intent.getIntent;
 
 public class ShakeService extends Service{
     private SensorManager sm;
     private float acelval;
     private float acellast;
     private float shake;
+    private int alpha_;
 
     @Override
     public IBinder onBind(Intent intent)
@@ -31,6 +35,7 @@ public class ShakeService extends Service{
     }
     @Override
     public void onCreate() {
+
         Toast.makeText(this, "Service Created!", Toast.LENGTH_LONG).show();
         super.onCreate();
 
@@ -40,16 +45,17 @@ public class ShakeService extends Service{
         @SuppressLint("InvalidWakeLockTag")
         @Override
         public void onSensorChanged(SensorEvent event) {
-
             float x = event.values[0];
             float y = event.values[1];
             float z = event.values[2];
+
             acellast = acelval;
             acelval = (float) Math.sqrt((double) (x * x + y * y + z * z));
             float delta = acelval - acellast;
             shake = shake * 0.9f + delta;
 
-            if (shake > 12) {
+            if (shake > alpha_) {
+
                 PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
                 boolean isScreenOn = pm.isInteractive();
 
@@ -59,7 +65,7 @@ public class ShakeService extends Service{
                     wl.acquire();
                     wl.release();
                 }
-                Toast toast = Toast.makeText(getApplicationContext(), "DO NOT SHAKE ME!!", Toast.LENGTH_LONG);
+                Toast toast = Toast.makeText(getApplicationContext(), "DO NOT SHAKE ME!!"+alpha_, Toast.LENGTH_LONG);
                 toast.show();
             }
 
@@ -81,7 +87,12 @@ public class ShakeService extends Service{
         acellast = SensorManager.GRAVITY_EARTH;
         acelval = SensorManager.GRAVITY_EARTH;
         shake = 0.00f;
-        return super.onStartCommand(intent, flags, startId);
+
+        alpha_ = intent.getIntExtra("alpha" ,12 );
+        Log.i("hithere:)))" , String.valueOf(alpha_));
+
+//        return super.onStartCommand(intent, flags, startId);
+        return START_STICKY;
 
     }
 
