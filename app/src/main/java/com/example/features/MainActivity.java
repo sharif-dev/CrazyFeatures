@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     SeekBar lockscreenbar;
     private int progress_;
     private int _progress;
+    private int temp =0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
