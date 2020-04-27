@@ -17,8 +17,10 @@ import android.widget.CompoundButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 public class MainActivity extends AppCompatActivity {
+    Toolbar toolbar;
     public static final int RESULT_ENABLE = 11;
     private DevicePolicyManager devicePolicyManager;
     private ActivityManager activityManager;
@@ -31,11 +33,18 @@ public class MainActivity extends AppCompatActivity {
     SeekBar lockscreenbar;
     private int progress_;
     private int _progress;
+    
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        toolbar = findViewById(R.id.toolbar);
+        setActionBar(toolbar);
+
+
+
         switch1 = findViewById(R.id.shakedetect);
         switch2 = findViewById(R.id.Lockscreen);
         shakesensivity = findViewById(R.id.alpha);
@@ -116,8 +125,12 @@ public class MainActivity extends AppCompatActivity {
                 if (isChecked)
                 {
 
+
                     if (active)
                     {
+
+
+
                         final Intent intent = new Intent(MainActivity.this , LockService.class);
 
                         lockscreenbar.setVisibility(View.VISIBLE);
@@ -144,6 +157,7 @@ public class MainActivity extends AppCompatActivity {
                             }
                         });
 
+                        startService(intent);
 
 
 
@@ -158,10 +172,10 @@ public class MainActivity extends AppCompatActivity {
                         intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, compName);
                         intent.putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION, "Additional text explaining why we need this permission");
                         startActivityForResult(intent, RESULT_ENABLE);
+
                         if (active)
                         {
                             final Intent intent2 = new Intent(MainActivity.this , LockService.class);
-
                             lockscreenbar.setVisibility(View.VISIBLE);
                             locksensivity.setVisibility(View.VISIBLE);
                             locksensivity.setText("Degree: "+ 25);
@@ -207,4 +221,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
+
 }
