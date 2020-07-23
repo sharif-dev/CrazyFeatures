@@ -33,7 +33,7 @@ public class AlarmActivity1 extends AppCompatActivity {
 
         vibrator = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
 
-//        alarmSpeed = findViewById(R.id.speedtxt);
+        alarmSpeed = findViewById(R.id.speedtxt);
         @SuppressLint("WrongConstant") SharedPreferences sh = getSharedPreferences("MySharedPref", 100);
         this.speed = sh.getInt("speed", 20);
         alarmSpeed.setText(alarmSpeed.getText() + String.valueOf(this.speed));
