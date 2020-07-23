@@ -1,4 +1,4 @@
-package com.example.alarmtest;
+package com.example.features;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -14,8 +14,8 @@ public class AlertReceiver extends BroadcastReceiver {
         NotificationHelper notificationHelper = new NotificationHelper(context);
         NotificationCompat.Builder nb = notificationHelper.getChannelNotification();
         notificationHelper.getManager().notify(1, nb.build());
-        Intent scheduledIntent = new Intent(context, AlarmActivity.class);
-        scheduledIntent.setClassName(context.getPackageName(), AlarmActivity.class.getName());
+        Intent scheduledIntent = new Intent(context, AlarmActivity1.class);
+        scheduledIntent.setClassName(context.getPackageName(), AlarmActivity1.class.getName());
         scheduledIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(scheduledIntent);
 
