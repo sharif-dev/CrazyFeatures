@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,10 +28,12 @@ public class MainActivity extends AppCompatActivity {
     private ComponentName compName;
     SwitchCompat switch1;
     SwitchCompat switch2;
+    SwitchCompat switch3;
     TextView shakesensivity;
     SeekBar shakeseekbar;
     TextView locksensivity;
     SeekBar lockscreenbar;
+    EditText speed;
     private int progress_;
     private int _progress;
 
@@ -47,17 +50,60 @@ public class MainActivity extends AppCompatActivity {
 
         switch1 = findViewById(R.id.shakedetect);
         switch2 = findViewById(R.id.Lockscreen);
+        switch3 = findViewById(R.id.alarm_clock);
+        speed = findViewById(R.id.numberText);
         shakesensivity = findViewById(R.id.alpha);
         shakeseekbar=findViewById(R.id.shakesense);
         lockscreenbar = findViewById(R.id.lockangel);
         locksensivity=findViewById(R.id.beta);
-
         shakeseekbar.setVisibility(View.GONE);
         shakesensivity.setVisibility(View.GONE);
-
+        speed.setVisibility(View.GONE);
         lockscreenbar.setVisibility(View.GONE);
         locksensivity.setVisibility(View.GONE);
 
+       ////////////////////////                 First feature        /////////////////////////////////////////////
+
+        SharedPreferences sharedPrefs3 = getSharedPreferences("com.example.features", MODE_PRIVATE);
+        switch3.setChecked(sharedPrefs3.getBoolean("tag", false));
+        switch3.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                if (isChecked){
+                    final Intent first = new Intent(MainActivity.this , ShakeService.class);
+                    SharedPreferences.Editor editor = getSharedPreferences("com.example.features", MODE_PRIVATE).edit();
+                    editor.putBoolean("tag", true);
+                    editor.apply();
+                   speed.setVisibility(View.VISIBLE);
+
+                   //TODO
+
+
+                }
+                else
+                {
+                    SharedPreferences.Editor editor = getSharedPreferences("com.example.features", MODE_PRIVATE).edit();
+                    editor.putBoolean("tag", false);
+                    editor.apply();
+                    speed.setVisibility(View.GONE);
+
+                    // TODO
+
+                }
+
+            }
+        });
+
+
+
+
+
+
+
+
+        /////////////////////////////////        Second fiture /////////////////////////
         SharedPreferences sharedPrefs = getSharedPreferences("com.example.features", MODE_PRIVATE);
         switch1.setChecked(sharedPrefs.getBoolean("tag", false));
         switch1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -158,7 +204,6 @@ public class MainActivity extends AppCompatActivity {
                         });
 
                         startService(intent);
-
 
 
                     }
