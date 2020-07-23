@@ -36,7 +36,7 @@ public class ShakeService extends Service{
     @Override
     public void onCreate() {
 
-        Toast.makeText(this, "Service Created!", Toast.LENGTH_LONG).show();
+//        Toast.makeText(this, "Service Created!", Toast.LENGTH_LONG).show();
         super.onCreate();
 
     }
@@ -79,7 +79,7 @@ public class ShakeService extends Service{
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Toast.makeText(getApplicationContext(), "Service Started!", Toast.LENGTH_LONG).show();
+//        Toast.makeText(getApplicationContext(), "Service Started!", Toast.LENGTH_LONG).show();
         sm = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 
         sm.registerListener(sensorEventListener, sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_UI , new Handler());
@@ -89,7 +89,7 @@ public class ShakeService extends Service{
         shake = 0.00f;
 
         alpha_ = intent.getIntExtra("alpha" ,12 );
-        Log.i("hithere:)))" , String.valueOf(alpha_));
+        Log.i("alphaValue: " , String.valueOf(alpha_));
 
 //        return super.onStartCommand(intent, flags, startId);
         return START_STICKY;

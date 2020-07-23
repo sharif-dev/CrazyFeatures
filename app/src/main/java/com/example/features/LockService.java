@@ -32,7 +32,7 @@ public class LockService extends Service {
     @Override
     public void onCreate() {
         sm = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        Toast.makeText(this, "SecondService Created!", Toast.LENGTH_LONG).show();
+//        Toast.makeText(this, "SecondService Created!", Toast.LENGTH_LONG).show();
         mdevicePolicy = (DevicePolicyManager) getSystemService(DEVICE_POLICY_SERVICE);
 
         super.onCreate();
@@ -74,7 +74,7 @@ public class LockService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Toast.makeText(this, "SecondService Started!", Toast.LENGTH_LONG).show();
+//        Toast.makeText(this, "SecondService Started!", Toast.LENGTH_LONG).show();
 
         sm.registerListener(sensorEventListener, sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
         beta_ = intent.getIntExtra("beta" , 25);
@@ -86,7 +86,7 @@ public class LockService extends Service {
     @Override
     public void onDestroy()
     {
-        Toast.makeText(this, "SecondService Destroyed!", Toast.LENGTH_LONG).show();
+//        Toast.makeText(this, "SecondService Destroyed!", Toast.LENGTH_LONG).show();
         sm.unregisterListener(sensorEventListener);
         super.onDestroy();
     }

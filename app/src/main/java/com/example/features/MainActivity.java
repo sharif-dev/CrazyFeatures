@@ -33,8 +33,7 @@ public class MainActivity extends AppCompatActivity {
     SeekBar lockscreenbar;
     private int progress_;
     private int _progress;
-    private  int num = 23;
-    
+
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
