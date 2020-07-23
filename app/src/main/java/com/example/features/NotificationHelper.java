@@ -49,7 +49,7 @@ public class NotificationHelper extends ContextWrapper {
         return new NotificationCompat.Builder(getApplicationContext(), channelID)
                 .setContentTitle("Alarm!")
                 .setContentText("It's Time!")
-//                .setSmallIcon(R.drawable.mob_vib3)
+                .setSmallIcon(R.drawable.mob_vib3)
                 .setVibrate(pattern);
     }
 }
